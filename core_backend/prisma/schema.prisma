@@ -1,0 +1,110 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+///
+/// The Customer model represents any person in the system.
+/// A customer has a personal balance, contact information, and can:
+///   • Own one or more businesses (via the ownedBusinesses relation)
+///   • Act as the payer in many transactions.
+///
+model Customer {
+  id              String        @id @default(cuid())
+  msisdn          String        @unique
+  firstName       String
+  lastName        String?
+  personalBalance Decimal       @default(0.0)
+
+  // Businesses this customer owns.
+  ownedBusinesses Business[]
+
+  // Transactions where this customer is the payer.
+  transactions    Transaction[]
+
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+}
+
+///
+/// The Business model represents a bill operator (e.g. "Food Store").
+/// Each business has:
+///   • A unique shortcode (e.g. "12345")
+///   • A human‑readable name
+///   • An organizational account balance
+///   • An owner, which is a Customer (the person who owns the business)
+///   • A collection of transactions (payments received)
+///
+model Business {
+  id                String        @id @default(cuid())
+  shortcode         String        @unique
+  name              String
+  orgAccountBalance Decimal       @default(0.0)
+
+  // The owner of this business.
+  ownerId           String
+  owner             Customer      @relation(fields: [ownerId], references: [id])
+
+  // Transactions in which customers pay this business.
+  transactions      Transaction[]
+
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+}
+
+///
+/// Enum for transaction types. For now, only "CustomerPayBillOnline" is defined.
+///
+enum TransactionType {
+  CustomerPayBillOnline
+  // Additional types can be added here.
+}
+
+///
+/// The Transaction model records a payment.
+/// It captures details similar to what Safaricom returns:
+///   • A unique transaction ID (transID)
+///   • Transaction time, amount, and invoice number
+///   • A snapshot of the business’s org balance after the transaction
+///   • Payer details (e.g. MSISDN, firstName)
+///
+/// It also links:
+///   • The payer (a Customer)
+///   • The receiving business (a Business)
+///
+model Transaction {
+  id                String          @id @default(cuid())
+  transID           String          @unique         // e.g. "RI4F2VFZBL"
+  transactionType   TransactionType
+  transTime         DateTime                          // e.g. "20250201160716" converted appropriately
+  transAmount       Decimal
+  businessShortCode String          // e.g. "12345" (for response display)
+  billRefNumber     String?         // blank for CustomerPayBillOnline transactions
+  invoiceNumber     String          @unique         // e.g. "INVOICE1234"
+  orgAccountBalance Decimal         // Business account balance after this transaction
+  thirdPartyTransID String?
+  MSISDN            String          // Payer's phone number
+  firstName         String          // Payer's first name
+
+  // Relation: the customer who is paying.
+  customerId        String
+  customer          Customer        @relation(fields: [customerId], references: [id])
+  // Relation: the business receiving the payment.
+  businessId        String
+  business          Business        @relation(fields: [businessId], references: [id])
+  
+  createdAt         DateTime        @default(now())
+}
+
+
