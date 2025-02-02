@@ -29,7 +29,7 @@ Its is a mock of an mpesa backend
 
 - **NestJS**: A powerful framework for building scalable server-side applications.
 - **Prisma ORM**: Type-safe database access for Node.js applications.
-- **PostgreSQL/MySQL**: Relational databases for data storage.
+- **PostgreSQL**: Relational databases for data storage.
 - **TypeScript**: A statically typed superset of JavaScript.
 - **Swagger**: API documentation and testing tool.
 
