@@ -13,8 +13,10 @@ config:
     timeout: 10
 
 scenarios:
-  - name: "Simple Transaction Test"
+  - name: "Transaction Test with Customer Pool"
+    beforeScenario: "beforeScenario"
     flow:
+      - function: "selectRandomCustomer"
       - post:
           url: "/transactions"
           headers:
@@ -22,13 +24,15 @@ scenarios:
             Content-Type: "application/json"
           json:
             transactionType: "CustomerPayBillOnline"
-            transAmount: 200
+            transAmount: "{{ vars.transAmount }}"
             businessShortCode: "12345"
             billRefNumber: ""
-            thirdPartyTransID: "test123"
-            MSISDN: "254700000127"
-            firstName: "John"
+            thirdPartyTransID: "test{{ $randomString(10) }}"
+            MSISDN: "{{ vars.selectedCustomer.msisdn }}"
+            firstName: "{{ vars.selectedCustomer.firstName }}"
           capture:
             - json: "$"
               as: "response"
+      - log: "Transaction completed for customer {{ vars.selectedCustomer.msisdn }} with amount {{ vars.transAmount }}"
       - log: "Response received: {{ response }}"
+    weight: 1

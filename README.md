@@ -32,6 +32,11 @@ Its is a mock of an mpesa backend
 - **PostgreSQL**: Relational databases for data storage.
 - **TypeScript**: A statically typed superset of JavaScript.
 - **Swagger**: API documentation and testing tool.
+- **Docker**: Containerization for easy deployment.
+- **Docker Compose**: Tool for defining and running multi-container Docker applications.
+- **Grafana**: Open-source analytics and monitoring platform.
+- **Prometheus**: Open-source monitoring and alerting toolkit.
+- **Artillery**: Modern, powerful, and easy-to-use load testing toolkit.
 
 ## Installation
 
@@ -39,3 +44,5 @@ Its is a mock of an mpesa backend
 ```bash
 git clone https://github.com/kamaliki/saf-mock.git
 cd saf-mock
+docker-compose up
+```
