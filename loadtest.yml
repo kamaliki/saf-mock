@@ -1,0 +1,19 @@
+config:
+  target: 'http://localhost:3000'  # Replace with your API URL
+  phases:
+    - duration: 600         # Test duration in seconds
+      arrivalRate: 5      # Number of new virtual users per second
+  variables:
+    msisdnPrefix: "254"    # Kenya prefix
+
+scenarios:
+  - name: "Customer Creation Test"    # Added descriptive name
+    flow:
+      - post:
+          url: "/customers"
+          json:
+            msisdn: "{{ msisdnPrefix }}{{ $randomNumber(100000000, 999999999) }}"  # More reliable MSISDN generation
+            firstName: "{{ $randomString(8) }}"   # Random first name
+            lastName: "{{ $randomString(8) }}"    # Random last name
+            personalBalance: "{{ $randomNumber(0, 50000) }}"  # Using built-in Artillery function
+    weight: 1  # Scenario weight

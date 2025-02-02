@@ -7,9 +7,10 @@ import { TransactionsModule } from './transactions/transactions.module';
 import { MetricsModule } from './metrics/metrics.module';
 import { MetricsMiddleware } from './metrics/metrics.middleware';
 import { SimulationsModule } from './simulations/simulations.module';
+import { ArtilleryModule } from './artillery/artillery.module';
 
 @Module({
-  imports: [CustomersModule, BusinessesModule, TransactionsModule, MetricsModule, SimulationsModule],
+  imports: [CustomersModule, BusinessesModule, TransactionsModule, MetricsModule, SimulationsModule, ArtilleryModule],
   controllers: [AppController],
   providers: [AppService],
 })
