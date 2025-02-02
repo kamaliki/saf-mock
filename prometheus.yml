@@ -1,0 +1,8 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'nestjs-app'
+    static_configs:
+      - targets: ['core_backend:3000']  # Target your NestJS app
+    metrics_path: '/metrics'

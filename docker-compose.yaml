@@ -12,6 +12,7 @@ services:
       - ./.env
     depends_on:
       - redis
+      - prometheus
     networks:
       - app_network
 
@@ -32,6 +33,29 @@ services:
       - "6380:6379"
     networks:
       - app_network
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    ports:
+      - "9090:9090" # Prometheus UI
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    networks:
+      - app_network
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - "3001:3000" # Grafana UI
+    env_file:
+      - ./.env
+      
+    networks:
+      - app_network
+    depends_on:
+      - prometheus
 
 volumes:
   postgres_data:
