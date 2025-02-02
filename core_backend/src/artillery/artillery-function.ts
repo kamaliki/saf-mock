@@ -1,4 +1,4 @@
-// src/artillery/artillery-functions.ts
+// src/artillery/artillery-function.ts
 import { PrismaClient } from '@prisma/client';
 import * as dotenv from 'dotenv';
 
@@ -7,9 +7,17 @@ dotenv.config();
 const prisma = new PrismaClient();
 let customerPool: any[] = [];
 
+interface ArtilleryContext {
+    vars: {
+        customerPool?: any[];
+        selectedCustomer?: any;
+    };
+}
+
 export const artilleryFunctions = {
-    async initializeCustomerPool(userContext: any, events: any, done: Function) {
+    async beforeScenario(context: ArtilleryContext) {
         try {
+            console.log('Starting beforeScenario...');
             customerPool = await prisma.customer.findMany({
                 select: {
                     msisdn: true,
@@ -23,31 +31,41 @@ export const artilleryFunctions = {
                 }
             });
             
-            userContext.vars.customerPool = customerPool;
+            context.vars.customerPool = customerPool;
             console.log(`Loaded ${customerPool.length} customers for testing`);
-            return done();
         } catch (error) {
             console.error('Error loading customers:', error);
-            return done(error);
+            throw error;
         }
     },
 
-    selectRandomCustomer(userContext: any, events: any, done: Function) {
+    selectRandomCustomer(context: ArtilleryContext) {
         if (customerPool.length > 0) {
             const randomCustomer = customerPool[Math.floor(Math.random() * customerPool.length)];
-            userContext.vars.selectedCustomer = randomCustomer;
+            context.vars.selectedCustomer = randomCustomer;
+            console.log('Selected customer for transaction:', {
+                msisdn: randomCustomer.msisdn,
+                firstName: randomCustomer.firstName,
+                balance: randomCustomer.personalBalance
+            });
+            
+            // Pre-calculate transaction amount for logging
+            const transAmount = Math.min(
+                Math.floor(Math.random() * 900) + 100, 
+                randomCustomer.personalBalance
+            );
+            console.log('Preparing transaction with amount:', transAmount);
+        } else {
+            console.log('No customers available to select from!');
         }
-        return done();
     },
 
-    async cleanup(userContext: any, events: any, done: Function) {
+    async afterScenario() {
         try {
             await prisma.$disconnect();
-            return done();
+            console.log('Disconnected from database');
         } catch (error) {
             console.error('Error disconnecting:', error);
-            return done(error);
         }
     }
 };
-// src/artillery/artillery-function.ts

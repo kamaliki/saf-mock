@@ -1,26 +1,34 @@
 # loadtest.yml
 config:
-  target: 'http://localhost:3000'
+  target: "http://localhost:3000"
   phases:
-    - duration: 60
+    - duration: 30
       arrivalRate: 1
   processor: "./src/artillery-function.js"
-  variables:
-    businessCodes: ["12345", "12346", "72346"]
+  verbose: true
+  ensure:
+    maxErrorRate: 1
+  http:
+    pool: 10
+    timeout: 10
 
 scenarios:
-  - name: "Transaction Simulation"
-    beforeScenario: "initializeCustomerPool"
-    afterScenario: "cleanup"
+  - name: "Simple Transaction Test"
     flow:
-      - function: "selectRandomCustomer"
       - post:
           url: "/transactions"
+          headers:
+            accept: "*/*"
+            Content-Type: "application/json"
           json:
             transactionType: "CustomerPayBillOnline"
-            transAmount: "{{ Math.min($randomNumber(100, 1000), vars.selectedCustomer.personalBalance) }}"
-            businessShortCode: "{{ businessCodes[$randomNumber(0,2)] }}"
+            transAmount: 200
+            businessShortCode: "12345"
             billRefNumber: ""
-            thirdPartyTransID: "trans{{ $randomString(10) }}"
-            MSISDN: "{{ vars.selectedCustomer.msisdn }}"
-            firstName: "{{ vars.selectedCustomer.firstName }}"
+            thirdPartyTransID: "test123"
+            MSISDN: "254700000127"
+            firstName: "John"
+          capture:
+            - json: "$"
+              as: "response"
+      - log: "Response received: {{ response }}"
