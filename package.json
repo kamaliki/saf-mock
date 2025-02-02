@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "@nestjs/mapped-types": "*",
-    "prom-client": "^15.1.3"
-  }
-}

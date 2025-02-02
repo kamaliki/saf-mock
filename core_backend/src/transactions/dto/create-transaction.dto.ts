@@ -68,16 +68,16 @@ export class CreateTransactionDto {
   })
   firstName: string;
 
-  @ApiProperty({
-    example: 'cuid_customer_123456',
-    description: 'The unique ID of the customer (payer).',
-  })
-  customerId: string;
+  // @ApiProperty({
+  //   example: 'cuid_customer_123456',
+  //   description: 'The unique ID of the customer (payer).',
+  // })
+  // customerId: string;
 
-  @ApiProperty({
-    example: 'cuid_business_123456',
-    description: 'The unique ID of the business receiving the payment.',
-  })
-  businessId: string;
+  // @ApiProperty({
+  //   example: 'cuid_business_123456',
+  //   description: 'The unique ID of the business receiving the payment.',
+  // })
+  // businessId: string;
 }
 
