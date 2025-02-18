@@ -24,15 +24,15 @@ scenarios:
             Content-Type: "application/json"
           json:
             transactionType: "CustomerPayBillOnline"
-            transAmount: "{{ vars.transAmount }}"
+            transAmount: "{{ transAmount }}"
             businessShortCode: "12345"
-            billRefNumber: ""
+            billRefNumber: "{{ $randomNumber(100000000, 999999999) }}"
             thirdPartyTransID: "test{{ $randomString(10) }}"
-            MSISDN: "{{ vars.selectedCustomer.msisdn }}"
-            firstName: "{{ vars.selectedCustomer.firstName }}"
+            MSISDN: "{{ selectedCustomer.msisdn }}"
+            firstName: "{{ selectedCustomer.firstName }}"
           capture:
             - json: "$"
               as: "response"
-      - log: "Transaction completed for customer {{ vars.selectedCustomer.msisdn }} with amount {{ vars.transAmount }}"
+      - log: "Transaction completed for customer {{ selectedCustomer.msisdn }} with amount {{ transAmount }}"
       - log: "Response received: {{ response }}"
     weight: 1
