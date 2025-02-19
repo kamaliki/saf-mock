@@ -8,6 +8,7 @@ import { MetricsModule } from './metrics/metrics.module';
 import { MetricsMiddleware } from './metrics/metrics.middleware';
 import { SimulationsModule } from './simulations/simulations.module';
 import { ArtilleryModule } from './artillery/artillery.module';
+import { RedisOptions } from './configs/app.constants';
 
 @Module({
   imports: [CustomersModule, BusinessesModule, TransactionsModule, MetricsModule, SimulationsModule, ArtilleryModule],
