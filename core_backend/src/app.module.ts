@@ -9,9 +9,18 @@ import { MetricsMiddleware } from './metrics/metrics.middleware';
 import { SimulationsModule } from './simulations/simulations.module';
 import { ArtilleryModule } from './artillery/artillery.module';
 import { RedisOptions } from './configs/app.constants';
+import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
-  imports: [CustomersModule, BusinessesModule, TransactionsModule, MetricsModule, SimulationsModule, ArtilleryModule],
+  imports: [
+    CustomersModule,
+    BusinessesModule,
+    TransactionsModule,
+    MetricsModule,
+    SimulationsModule,
+    ArtilleryModule,
+    CacheModule.registerAsync(RedisOptions),
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
