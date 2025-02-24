@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { CustomersService } from './customers.service';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @ApiTags('customers')
 @Controller('customers')
@@ -32,8 +33,12 @@ export class CustomersController {
 
   //get customer by msidn
   @Get('msisdn/:msisdn')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth() // Specifies that a JWT token is required
   @ApiOperation({ summary: 'Retrieve a customer by phone number' })
   @ApiResponse({ status: 200, description: 'The customer is returned.' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' }) // Document possible errors
+  @ApiResponse({ status: 404, description: 'Customer not found' })
   findByMsisdn(@Param('msisdn') msisdn: string) {
     return this.customersService.findByMsisdn(msisdn);
   }

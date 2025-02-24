@@ -13,6 +13,8 @@ export class AuthService {
 
   async validateUser(msisdn: string, pin: string): Promise<any> {
     const user = await this.usersService.findByMsisdn(msisdn);
+    console.log('user logging in');
+    console.log(user);
     if (user && user.pin === pin) {
       const { pin, ...result } = user;
       return result;
@@ -20,7 +22,9 @@ export class AuthService {
     return null;
   }
 
-  async login(user: Customer) {
+  async login(user: any) {
+    console.log('login part ');
+    console.log(user);
     const payload = { username: user.id, sub: user.firstName };
     return {
       access_token: this.jwtService.sign(payload),
