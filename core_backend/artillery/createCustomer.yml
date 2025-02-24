@@ -1,8 +1,8 @@
 config:
   target: 'http://localhost:3000'  # Replace with your API URL
   phases:
-    - duration: 600         # Test duration in seconds
-      arrivalRate: 5      # Number of new virtual users per second
+    - duration: 10         # Test duration in seconds
+      arrivalRate: 1      # Number of new virtual users per second
   variables:
     msisdnPrefix: "254"    # Kenya prefix
 
