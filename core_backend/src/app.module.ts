@@ -10,6 +10,7 @@ import { SimulationsModule } from './simulations/simulations.module';
 import { ArtilleryModule } from './artillery/artillery.module';
 import { RedisOptions } from './configs/app.constants';
 import { CacheModule } from '@nestjs/cache-manager';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { CacheModule } from '@nestjs/cache-manager';
     SimulationsModule,
     ArtilleryModule,
     CacheModule.registerAsync(RedisOptions),
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

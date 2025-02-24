@@ -29,6 +29,8 @@ model Customer {
 
   // Businesses this customer owns.
   ownedBusinesses Business[]
+  //introduce PIN 4 digit number
+  pin             String        @default("0000") @db.VarChar(4)
 
   // Transactions where this customer is the payer.
   transactions    Transaction[]
@@ -68,7 +70,6 @@ model Business {
 ///
 enum TransactionType {
   CustomerPayBillOnline
-  // Additional types can be added here.
 }
 
 ///
@@ -96,7 +97,6 @@ model Transaction {
   thirdPartyTransID String?
   MSISDN            String          // Payer's phone number
   firstName         String          // Payer's first name
-
   // Relation: the customer who is paying.
   customerId        String
   customer          Customer        @relation(fields: [customerId], references: [id])

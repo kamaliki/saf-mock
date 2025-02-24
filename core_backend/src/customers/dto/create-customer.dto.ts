@@ -24,4 +24,11 @@ export class CreateCustomerDto {
     description: 'Initial personal balance. If not provided, it defaults to 0.0 in Prisma.' 
   })
   personalBalance?: number;
+
+  @ApiProperty({ 
+    example: '1234', 
+    description: 'Customer PIN' 
+  })
+  pin: string; //must be 4 digits
+  
 }

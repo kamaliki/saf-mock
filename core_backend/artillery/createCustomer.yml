@@ -18,5 +18,6 @@ scenarios:
             firstName: "{{ firstName }}"
             lastName: "{{ lastName }}"
             personalBalance: "{{ $randomNumber(0, 50000) }}"
+            pin: "{{ $randomNumber(1000, 9999) }}"
 
 
