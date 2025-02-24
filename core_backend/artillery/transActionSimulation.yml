@@ -1,10 +1,10 @@
 # loadtest.yml
 config:
-  target: "http://localhost:3000"
+  target: http://localhost:3000
   phases:
     - duration: 30
       arrivalRate: 1
-  processor: "../src/artillery-function.js"
+  processor: ../src/artillery-function.js
   verbose: true
   ensure:
     maxErrorRate: 1
@@ -13,26 +13,27 @@ config:
     timeout: 10
 
 scenarios:
-  - name: "Transaction Test with Customer Pool"
-    beforeScenario: "beforeScenario"
+  - name: Transaction Test with Customer Pool
+    beforeScenario: beforeScenario
     flow:
-      - function: "selectRandomCustomer"
+      - function: selectRandomCustomer
       - post:
-          url: "/transactions"
+          url: /transactions
           headers:
-            accept: "*/*"
-            Content-Type: "application/json"
+            accept: '*/*'
+            Content-Type: application/json
           json:
-            transactionType: "CustomerPayBillOnline"
-            transAmount: "{{ transAmount }}"
-            businessShortCode: "12345"
-            billRefNumber: "{{ $randomNumber(100000000, 999999999) }}"
-            thirdPartyTransID: "test{{ $randomString(10) }}"
-            MSISDN: "{{ selectedCustomer.msisdn }}"
-            firstName: "{{ selectedCustomer.firstName }}"
+            transactionType: CustomerPayBillOnline
+            transAmount: '{{ transAmount }}'
+            businessShortCode: '12345'
+            billRefNumber: '{{ $randomNumber(100000000, 999999999) }}'
+            thirdPartyTransID: test{{ $randomString(10) }}
+            MSISDN: '{{ selectedCustomer.msisdn }}'
+            firstName: '{{ selectedCustomer.firstName }}'
           capture:
-            - json: "$"
-              as: "response"
-      - log: "Transaction completed for customer {{ selectedCustomer.msisdn }} with amount {{ transAmount }}"
-      - log: "Response received: {{ response }}"
+            - json: $
+              as: response
+      - log: Transaction completed for customer {{ selectedCustomer.msisdn }} with
+          amount {{ transAmount }}
+      - log: 'Response received: {{ response }}'
     weight: 1

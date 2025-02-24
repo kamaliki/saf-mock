@@ -1,19 +1,22 @@
 config:
   target: 'http://localhost:3000'  # Replace with your API URL
   phases:
-    - duration: 10         # Test duration in seconds
+    - duration: 10        # Test duration in seconds
       arrivalRate: 1      # Number of new virtual users per second
   variables:
     msisdnPrefix: "254"    # Kenya prefix
+  processor: "../src/artillery/generateNames.js"  # Path to the custom function
 
 scenarios:
-  - name: "Customer Creation Test"    # Added descriptive name
+  - name: "Customer Creation Test"
     flow:
+      - function: "generateNames"  # Use the custom function to generate names
       - post:
           url: "/customers"
           json:
-            msisdn: "{{ msisdnPrefix }}{{ $randomNumber(100000000, 999999999) }}"  # More reliable MSISDN generation
-            firstName: "{{ $randomString(8) }}"   # Random first name
-            lastName: "{{ $randomString(8) }}"    # Random last name
-            personalBalance: "{{ $randomNumber(0, 50000) }}"  # Using built-in Artillery function
-    weight: 1  # Scenario weight
+            msisdn: "{{ msisdnPrefix }}{{ $randomNumber(100000000, 999999999) }}"
+            firstName: "{{ firstName }}"
+            lastName: "{{ lastName }}"
+            personalBalance: "{{ $randomNumber(0, 50000) }}"
+
+
