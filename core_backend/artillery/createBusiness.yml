@@ -1,0 +1,24 @@
+config:
+  target: "http://localhost:3000"
+  phases:
+    - duration: 10
+      arrivalRate: 1
+  processor: "../src/artillery/generateBusiness.js"
+
+scenarios:
+  - name: "Business Creation Test"
+    flow:
+      - get:
+          url: "/customers"
+          capture:
+            json: "$"  # Ensure it captures a list of customer IDs
+            as: "customers"
+      - function: "selectRandomCustomer"  # Selects a valid owner ID
+      - function: "generateBusinessName"  # Generates a meaningful name
+      - post:
+          url: "/businesses"
+          json:
+            shortcode: "{{ $randomNumber(10000, 99999) }}"
+            name: "{{ businessName }}"
+            orgAccountBalance: "{{ $randomNumber(0, 50000) }}"
+            ownerId: "{{ selectedCustomer }}"

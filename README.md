@@ -46,3 +46,9 @@ git clone https://github.com/kamaliki/saf-mock.git
 cd saf-mock
 docker-compose up
 ```
+
+### 2. Run simulations ro create businesses, customers and transactions
+```bash
+artillery run ... #specific yaml file e.g artillery run createCustomer.yml
+
+```
