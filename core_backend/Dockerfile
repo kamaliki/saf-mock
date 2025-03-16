@@ -4,16 +4,17 @@ FROM node:20
 # Set the working directory inside the container
 WORKDIR /usr/src/app
 
-# Copy package files and install dependencies
+# Copy package.json and package-lock.json first (for better caching)
 COPY package*.json ./
+
+# Install dependencies
 RUN npm install --legacy-peer-deps
 
-# Copy the rest of the application code
+# Copy the rest of the application files
 COPY . .
 
-# Generate Prisma client during the build phase
-RUN npx prisma generate
+# Ensure the app builds correctly
+RUN npm run build
 
-# Start the service with a script that waits for the database to be ready
-CMD ["sh", "-c", "until nc -z postgres 5432; do echo 'Waiting for Postgres...'; sleep 2; done; npx prisma migrate dev && npm run start:dev"]
-
+# Set the default command to start the app
+CMD ["node", "dist/main.js"]
